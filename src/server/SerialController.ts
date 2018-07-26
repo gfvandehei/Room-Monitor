@@ -22,7 +22,9 @@ export class SerialController{
             let ports: any[] = await SerialPort.list();
             console.log(ports);
             ports.forEach((port: any) =>{
-                serialList.push(port.comName);
+                if(port.comName !== "COM1"){ //dont connect to windows port
+                    serialList.push(port.comName);
+                }
                 /*if(port.manufacturer){
                     if(port.manufacturer.indexOf("Arduino") !== -1){
                         

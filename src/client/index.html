@@ -2,9 +2,24 @@
     <header>
         <title>This is title</title></header>
     <body>
-        <div class = "data-display">
-            <div class = "Temp"></div>
-            <div class = "Humid"></div>
+        <div class = "monitor">
+            <header class = "monitor-header">Data Monitor</header>
+            <div class = "environment-monitor">
+                <div class = "Temp">
+                    <header class = "data-header">Temperature</header>
+                    <div class = "data-disp">
+                        <p id = "intemp">Inside: Not available</p>
+                        <p id = "outtemp">Outside: Not available</p>
+                    </div>
+                </div>
+                <div class = "Humid">
+                    <header class = "data-header">Humidity</header>
+                    <div class = "data-disp">
+                        <p id = "inhum">Inside: Not available</p>
+                        <p id = "outhum">Outside: Not available</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
