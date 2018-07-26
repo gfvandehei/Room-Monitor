@@ -19,12 +19,12 @@ class App{
                     body: JSON.stringify({}),
                 });
 
-                let data =await res.json();
+                let data = await res.json();
                 console.log(data);
                 if(data.status){
                     if(data.dataStat){
-                        this.humidelem.innerHTML = `Humidity| Outside: ${data} Inside: ${data.inTemp}`;
-                        this.tempelem.innerHTML = `Temperature| Outside: ${data.outHumid} Inside: ${data.inHumid}`;
+                        this.humidelem.innerHTML = `Humidity| Outside: ${data.data[0][0]} Inside: ${data.data[0][1]}`;
+                        this.tempelem.innerHTML = `Temperature| Outside: ${data.data[1][1]} Inside: ${data.data[1][2]}`;
                     }
                 }
                 

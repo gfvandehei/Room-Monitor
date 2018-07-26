@@ -8,21 +8,26 @@ export class SerialController{
     public isConnected = false;
 
     constructor(){
-        this.getPorts();
+        this.initSerial();
+    }
+
+    private async initSerial(){
+        await this.getPorts();
         this.connectSerial();
-    
     }
 
     private async getPorts(){
         let serialList: string[] = [];
         try{
             let ports: any[] = await SerialPort.list();
+            console.log(ports);
             ports.forEach((port: any) =>{
-                if(port.manufacturer){
+                serialList.push(port.comName);
+                /*if(port.manufacturer){
                     if(port.manufacturer.indexOf("Arduino") !== -1){
-                        serialList.push(port.comName);
+                        
                     }
-                }
+                }*/
             });
             console.log(serialList);
         }
@@ -40,6 +45,8 @@ export class SerialController{
         }
 
         try{
+            console.log(this.serialList[0]);
+            
             this.serialPort = new SerialPort(this.serialList[0], {
                 baudRate: 9600,
                 // defaults for Arduino serial communication
@@ -52,7 +59,9 @@ export class SerialController{
                 this.isConnected = true;
                 this.serialPort.on("data", (data) => {
                     let parsedData = this.handleData(data);
-                    this.OnData(parsedData);
+                    if(parsedData){
+                        this.OnData(parsedData);
+                    }
                 });
             });
         }

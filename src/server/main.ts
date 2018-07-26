@@ -9,7 +9,10 @@ const app = express();
 const serial = new SerialController();
 var retData:any = null
 
-serial.OnData = (data:any) => {retData = data}; 
+serial.OnData = (data:any) => {
+  console.log(data);
+  retData = data;
+}; 
 
 
 app.use(compression());
