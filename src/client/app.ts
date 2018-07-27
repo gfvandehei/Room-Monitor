@@ -1,4 +1,5 @@
 import "./styles.css";
+import "./images/satalite.png"
 class App{
     private humidelem = document.querySelector(".Humid");
     private tempelem = document.querySelector(".Temp");
