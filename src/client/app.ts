@@ -1,41 +1,21 @@
 import "./styles.css";
 import "./images/satalite.png"
+import { ViewController } from "./ViewController";
 class App{
-    private humidelem = document.querySelector(".Humid");
-    private tempelem = document.querySelector(".Temp");
-
+    private viewController = new ViewController();
+    private monitorNav = document.querySelector(".monitor-nav") as HTMLElement;
+    private controlNav = document.querySelector(".control-nav") as HTMLElement;
 
     constructor(){
-        console.log("Created");
-        this.getWeatherData();
-        setInterval(() => this.getWeatherData(),5000); //make client request weather data every 5 seconds
-
+        this.setEventHandlers();
     }
 
-    private async getWeatherData(){
-        //make initial post request
-        try{
-            let res = await fetch("/data", {
-                method: "POST",
-                headers: {
-                    "Content-Type" : 'application/JSON'
-                },
-                body: JSON.stringify({}),
-            });
-
-            let data = await res.json();
-            console.log(data);
-            if(data.status){
-                if(data.dataStat){
-                    this.humidelem.innerHTML = `Humidity| Outside: ${data.data[0][0]} Inside: ${data.data[0][1]}`;
-                    this.tempelem.innerHTML = `Temperature| Outside: ${data.data[1][1]} Inside: ${data.data[1][2]}`;
-                }
-            }
-            
-
+    private setEventHandlers(){
+        this.monitorNav.onclick = () => {
+            this.viewController.SwitchView("monitor");
         }
-        catch(err){
-            console.log(err);
+        this.controlNav.onclick = () => {
+            this.viewController.SwitchView("control");
         }
     }
 }
