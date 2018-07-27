@@ -3,6 +3,11 @@ body{
     font-family: Roboto, sans-serif;
 }
 
+h1{
+    text-align: center;
+    font-size: 2vw;
+}
+
 .nav{
     position: absolute;
     width: 100%;
@@ -41,6 +46,39 @@ body{
     /* display: flex; */
     position: relative;
     margin-right: auto;
+    display: flex;
+    flex-direction: row;
+}
+
+.section{
+    width: 30%;
+    background-color: #2f2FA2;
+    color: white;
+    margin: 10px;
+    border-radius: 10px;
+    font-size: 1.5vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.inner-section{
+    margin-left: 5%;
+    display: flex;
+    flex-direction: column;
+}
+
+.inner-inner-section{
+    margin-left: 5%;
+    border-radius: 5px;
+    border: 2px solid rgba(255,255,255,.4);
+    padding: 5px;
+    width: 80;
+    margin-bottom: 3px;
+}
+
+.inner-header{
+    font-size: 1vw;
+    text-align: left;
 }
 
 

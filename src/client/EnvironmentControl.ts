@@ -36,10 +36,10 @@ export class EnvironmentControl{
 
         let envData = await this.startEnvCollection();
 
-        this.tempInDiv.innerText = envData[0][0];
-        this.tempOutDiv.innerText = envData[0][0];
-        this.humiInDiv.innerText = envData[1][0];
-        this.humiInDiv.innerText = envData[1][1];
+        this.tempInDiv.innerText = "Inside: "+envData[0][0];
+        this.tempOutDiv.innerText = "Outside: "+envData[0][0];
+        this.humiInDiv.innerText = "Inside: "+envData[1][0];
+        this.humiInDiv.innerText = "Outside: "+envData[1][1];
     }
 
     public startDataFlow(){
