@@ -5,6 +5,19 @@ export class SerialController{
     private serialPort: SerialPort;
     public OnData: (data: any) => void;
     private receivedData = "";
+    private ardData:any = {
+        Temperature: { //more might be added
+            tmp1i: 0,
+            tmp1o: 0,
+            tmp2i: 0,
+            tmp2o: 0,
+            tmp3i: 0,
+            tmp3o: 0,
+            tmp4i: 0,
+            tmp4o: 0
+        }
+    }
+
     public isConnected = false;
 
     constructor(){
@@ -14,6 +27,7 @@ export class SerialController{
     private async initSerial(){
         await this.getPorts();
         this.connectSerial();
+        this.OnData(this.ardData);
     }
 
     private async getPorts(){
@@ -25,11 +39,6 @@ export class SerialController{
                 if(port.comName !== "COM1"){ //dont connect to windows port
                     serialList.push(port.comName);
                 }
-                /*if(port.manufacturer){
-                    if(port.manufacturer.indexOf("Arduino") !== -1){
-                        
-                    }
-                }*/
             });
             console.log(serialList);
         }
@@ -40,6 +49,23 @@ export class SerialController{
         this.serialList = serialList;
     }
 
+    private handleData(data:any){
+        let parsedData = this.getBuffArr(data); //makes an array of 
+        //format the parsedData into the arduino json
+        if(parsedData[0] === "TMP"){
+            this.ardData.Temperature.tmp1i = parsedData[1];
+            this.ardData.Temperature.tmp1o = parsedData[2];
+            this.ardData.Temperature.tmp2i = parsedData[3];
+            this.ardData.Temperature.tmp2o = parsedData[4];
+            this.ardData.Temperature.tmp3i = parsedData[5];
+            this.ardData.Temperature.tmp3o = parsedData[6];
+            this.ardData.Temperature.tmp4i = parsedData[7];
+            this.ardData.Temperature.tmp4o = parsedData[8];
+        }
+        
+        this.OnData(this.ardData);
+    }
+
     private connectSerial(){
         if(!this.serialList){
             console.log("No serial devices found");
@@ -48,7 +74,6 @@ export class SerialController{
 
         try{
             console.log(this.serialList[0]);
-            
             this.serialPort = new SerialPort(this.serialList[0], {
                 baudRate: 9600,
                 // defaults for Arduino serial communication
@@ -58,13 +83,9 @@ export class SerialController{
             });
             this.serialPort.on("open", () =>{
                 console.log(`Port ${this.serialList[0]} has been opened`);
+                setInterval(() => this.serialPort.write("RELLO"), 1000);
                 this.isConnected = true;
-                this.serialPort.on("data", (data) => {
-                    let parsedData = this.handleData(data);
-                    if(parsedData){
-                        this.OnData(parsedData);
-                    }
-                });
+                this.serialPort.on("data", (data) => {console.log(data);this.handleData(data);});
             });
         }
         catch(err){
@@ -72,17 +93,20 @@ export class SerialController{
         }
     }
 
-    private handleData(data: any){
+    public sendSerial(tosend: string){
+        this.serialPort.write(tosend);
+    }
+
+    private getBuffArr(data: any){
         this.receivedData += data.toString();
-        if (this.receivedData.indexOf('E') >= 0 && this.receivedData.indexOf('B') >= 0) {
+        if (this.receivedData.indexOf('<') >= 0 && this.receivedData.indexOf('>') >= 0) {
             // save the data between 'B' and 'E'
-          let sendData:any = this.receivedData.substring(this.receivedData.indexOf('B') + 1, this.receivedData.indexOf('E'));
+          let sendData:any = this.receivedData.substring(this.receivedData.indexOf('<') + 1, this.receivedData.indexOf('>'));
           sendData = sendData.split(",");
-          for(let i=0; i< sendData.length; i++){
-            sendData[i] = sendData[i].split(" ");
-          }
-          this.receivedData = "";
+          console.log(sendData);
           return sendData;
         }
+
+        return ["NAN"];
     }
 }

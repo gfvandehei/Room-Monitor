@@ -1,3 +1,5 @@
+import { json } from "body-parser";
+
 export class EnvironmentControl{
     private temp:HTMLElement;
     private tempInDiv:HTMLElement;
@@ -11,7 +13,7 @@ export class EnvironmentControl{
  
     }
 
-    private async startEnvCollection(): Promise<[[string,string],[string,string]]>{
+    private async startEnvCollection(): Promise<any>{
         try{
             let res = await fetch("/data", {
                 method: "POST",
@@ -23,12 +25,13 @@ export class EnvironmentControl{
 
             let data = await res.json();
             console.log(data);
-            return [[data.data[0][0],data.data[1][1]],[data.data[1][0],data.data[1][1]]];
+            return data;
 
         }
         catch(err){
             console.log(err);
-            return [["0","0"],["0","0"]];
+
+            return {};
         }
     }
 
@@ -36,10 +39,10 @@ export class EnvironmentControl{
 
         let envData = await this.startEnvCollection();
 
-        this.tempInDiv.innerText = "Inside: "+envData[0][0];
-        this.tempOutDiv.innerText = "Outside: "+envData[0][0];
-        this.humiInDiv.innerText = "Inside: "+envData[1][0];
-        this.humiInDiv.innerText = "Outside: "+envData[1][1];
+        this.tempInDiv.innerText = "Inside: "+envData.data.Temperature.tmp1i;
+        this.tempOutDiv.innerText = "Outside: "+envData.data.Temperature.tmp1i;
+        this.humiInDiv.innerText = "Inside: "+envData.data.Temperature.tmp1i;
+        this.humiInDiv.innerText = "Outside: "+envData.data.Temperature.tmp1i;
     }
 
     public startDataFlow(){

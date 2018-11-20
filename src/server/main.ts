@@ -7,11 +7,11 @@ import {SerialController} from "./SerialController";
 
 const app = express();
 const serial = new SerialController();
-var retData:any = null
+var arduinoData:any = null
 
 serial.OnData = (data:any) => {
   console.log(data);
-  retData = data;
+  arduinoData = data;
 }; 
 
 
@@ -28,27 +28,12 @@ app.get("/", (req: any,res: any,next: any) =>{
 });
 
 app.post("/data", (req: any,res: any) =>{
-  if(serial.isConnected === false){
-    res.send({
-      status: false,
-      dataStat: false
-    });
-  }
-  else{
-    if(retData == null){
-      res.send({
-        status: true,
-        dataStat: false,
-      });
-    }
-    else{
-      res.send({
-        status: true,
-        dataStat: true,
-        data: retData,
-      });
-    }
-  }
+  let status = serial.isConnected;
+
+  res.send({
+      status: status,
+      data: arduinoData
+  });
 });
 
 
